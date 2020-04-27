@@ -1,3 +1,7 @@
+# from utiles import log
+from urllib.parse import unquote_plus
+
+
 class Request:
 
     def __init__(self, raw_data: str):
@@ -42,3 +46,12 @@ class Request:
 
             self.path = path
             self.query = query
+
+    def form(self) -> dict:
+        body = unquote_plus(self.body)
+        args = body.split('&')
+        form = dict()
+        for arg in args:
+            k, v = arg.split('=')
+            form[k] = v
+        return form
