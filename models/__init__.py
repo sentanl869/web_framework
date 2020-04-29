@@ -67,7 +67,7 @@ class Model:
             {}
         '''.format(cls.table_name())
 
-        if len(kwargs) > 1:
+        if len(kwargs) > 0:
             sql_and = ' AND '.join(
                 ['`{}`=%s'.format(k) for k in kwargs.keys()]
             )
