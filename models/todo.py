@@ -3,7 +3,7 @@ from models import Model
 
 class Todo(Model):
     sql_create = '''
-    CREAT TABLE {} (
+    CREATE TABLE `todo` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `title` VARCHAR(140) NOT NULL,
         `user_id` INT NOT NULL,

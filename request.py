@@ -5,6 +5,7 @@ from urllib.parse import unquote_plus
 class Request:
 
     def __init__(self, raw_data: str):
+        self.raw = raw_data
         headers, self.body = raw_data.split('\r\n\r\n', 1)
         h = headers.split('\r\n')
         p = h[0].split()
@@ -17,6 +18,9 @@ class Request:
 
         self.headers_add(h[1:])
         self.path_parse(path)
+
+    def __repr__(self) -> str:
+        return self.raw
 
     def headers_add(self, header: list):
         all_lines = header

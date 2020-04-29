@@ -11,7 +11,6 @@ def initialized_render():
     template_path = path.join(dictionary, 'templates')
     loader = FileSystemLoader(template_path)
     e = Environment(loader=loader)
-    log('***e', type(e))
     return e
 
 
@@ -51,11 +50,19 @@ def redirect(url: str, headers: dict = None) -> bytes:
     return r.encode()
 
 
+def error(request, code: int = 404) -> bytes:
+    log(request)
+    code = str(code)
+    r = {
+        '404': b'HTTP/1.1 404 NOT FOUND\r\n\r\n<h1>NOT FOUND</h1>'
+    }
+    return r.get(code, b'')
+
+
 class TemplateRender:
     e = initialized_render()
 
     @classmethod
     def render(cls, filename: str, *args, **kwargs) -> str:
         template = cls.e.get_template(filename)
-        log('***template', type(template.render(*args, **kwargs)))
         return template.render(*args, **kwargs)

@@ -1,6 +1,7 @@
 import socket
 from utiles import log
 from request import Request
+from routes import error
 from routes.routes_todo import route_dict as todo_routes
 
 
@@ -9,7 +10,7 @@ def response_for_path(request):
     r = dict()
     r.update(todo_routes())
 
-    response = r.get(request.path)
+    response = r.get(request.path, error)
     return response(request)
 
 
@@ -20,7 +21,7 @@ def process_connection(connection: socket.socket):
         while True:
             r = connection.recv(buffer_size)
             request += r
-            if len(r) < buffer_size:
+            if 0 < len(r) < buffer_size:
                 # log(request)
                 # log(request.decode())
                 request = request.decode()
