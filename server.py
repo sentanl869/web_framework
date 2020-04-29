@@ -1,5 +1,16 @@
 import socket
 from utiles import log
+from request import Request
+from routes.routes_todo import route_dict as todo_routes
+
+
+def response_for_path(request):
+
+    r = dict()
+    r.update(todo_routes())
+
+    response = r.get(request.path)
+    return response(request)
 
 
 def process_connection(connection: socket.socket):
@@ -10,12 +21,13 @@ def process_connection(connection: socket.socket):
             r = connection.recv(buffer_size)
             request += r
             if len(r) < buffer_size:
-                log(request)
-                log(request.decode())
+                # log(request)
+                # log(request.decode())
+                request = request.decode()
+                r = Request(request)
                 break
 
-        http_response = "HTTP/1.1 200 OK\r\n\r\n<h1>Hello World!</h1>"
-        response = http_response.encode()
+        response = response_for_path(r)
         connection.sendall(response)
 
 

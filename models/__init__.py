@@ -28,8 +28,12 @@ class Model:
     @classmethod
     def insert(cls, form: dict):
         form.pop('id')
-        sql_keys = ', '.join(['`{}`'.format(k) for k in form.keys()])
-        sql_value = ', '.join(['%s'] * len(form))
+        sql_keys = ', '.join(
+            ['`{}`'.format(k) for k in form.keys()]
+        )
+        sql_value = ', '.join(
+            ['%s'] * len(form)
+        )
         sql_insert = '''
         INSERT INTO
             {} ({})
@@ -55,3 +59,32 @@ class Model:
         _id = cls.insert(m.__dict__)
         m.id = _id
         return m
+
+    @classmethod
+    def all(cls, **kwargs) -> list:
+        sql_select = '''
+        SELECT * FROM
+            {}
+        '''.format(cls.table_name())
+
+        if len(kwargs) > 1:
+            sql_and = ' AND '.join(
+                ['`{}`=%s'.format(k) for k in kwargs.keys()]
+            )
+            sql_where = '''
+            
+            WHERE
+                {}
+            '''.format(sql_and)
+            sql_select = '{}{}'.format(sql_select, sql_where)
+        # log(sql_select)
+        values = tuple(kwargs.values())
+
+        ms = list()
+        with cls.connection.cursor() as cursor:
+            cursor.execute(sql_select, values)
+            result = cursor.fetchall()
+            for line in result:
+                m = cls(line)
+                ms.append(m)
+            return ms
