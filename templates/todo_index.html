@@ -11,11 +11,11 @@
         <button type="submit">添加</button>
     </form>
     {% for t in todos %}
-    <div>
-        {{ t.id }} : {{ t.title }}
-        <a href="/todo/edit?id={{ t.id }}">编辑</a>
-        <a href="/todo/delete?id={{ t.id }}">删除</a>
-    </div>
+        <div>
+            {{ t.id }} : {{ t.title }}
+            <a href="/todo/edit?id={{ t.id }}">编辑</a>
+            <a href="/todo/delete?id={{ t.id }}">完成</a>
+        </div>
     {% endfor %}
 </body>
 </html>

@@ -61,7 +61,35 @@ class Model:
         return m
 
     @classmethod
-    def all(cls, **kwargs) -> list:
+    def find_by(cls, **kwargs):
+        sql_select = '''
+        SELECT * FROM
+            {}
+        '''.format(cls.table_name())
+        sql_and = ' AND '.join(
+            ['`{}`=%s'.format(k) for k in kwargs.keys()]
+        )
+        sql_where = '''
+        WHERE
+            {}
+        '''.format(sql_and)
+        sql_limit = '''
+        LIMIT 1
+        '''
+        sql_select = '{}{}{}'.format(sql_select, sql_where, sql_limit)
+        # log(sql_select)
+        values = tuple(kwargs.values())
+
+        with cls.connection.cursor() as cursor:
+            cursor.execute(sql_select, values)
+            result = cursor.fetchone()
+            if result is None:
+                return None
+            else:
+                return cls(result)
+
+    @classmethod
+    def find_all(cls, **kwargs) -> list:
         sql_select = '''
         SELECT * FROM
             {}
@@ -72,7 +100,6 @@ class Model:
                 ['`{}`=%s'.format(k) for k in kwargs.keys()]
             )
             sql_where = '''
-            
             WHERE
                 {}
             '''.format(sql_and)

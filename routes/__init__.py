@@ -1,4 +1,5 @@
 from os import path
+from functools import wraps
 from jinja2 import (
     Environment,
     FileSystemLoader
@@ -66,3 +67,13 @@ class TemplateRender:
     def render(cls, filename: str, *args, **kwargs) -> str:
         template = cls.e.get_template(filename)
         return template.render(*args, **kwargs)
+
+
+def current_user(request):
+    pass
+
+
+def login_required(route_function):
+    @wraps(route_function)
+    def r():
+        pass

@@ -3,10 +3,12 @@ import secret
 import config
 # from utiles import log
 from models.todo import Todo
+from models.user import User
 
 
 def recreate_table(cursor: pymysql.cursors.DictCursor):
     cursor.execute(Todo.sql_create)
+    cursor.execute(User.sql_create)
 
 
 def recreate_database():

@@ -4,13 +4,13 @@ from routes import (
 )
 
 
-def index(request) -> bytes:
-    body = TemplateRender.render('todo_index.html')
+def login_view(request):
+    body = TemplateRender.render('login.html')
     return html_response(body)
 
 
 def route_dict() -> dict:
     d = {
-        '/todo/index': index
+        '/todo/login': login_view
     }
     return d
