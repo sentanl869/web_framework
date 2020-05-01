@@ -2,17 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Register</title>
 </head>
 <body>
-    <form action="/todo/user/login" method="post">
+    <form action="/todo/user/register" method="post">
         <input type="text" name="username" placeholder="请输入用户名">
         <input type="text" name="password" placeholder="请输入密码">
-        <button type="submit">登录</button>
+        <button type="submit">注册</button>
     </form>
-    <div>
-        如果您还没有账号，请点击这里<a href="/todo/register">注册</a>
-    </div>
-    {{ reslut }}
+    {{result}}
 </body>
 </html>

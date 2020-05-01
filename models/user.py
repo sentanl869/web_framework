@@ -1,5 +1,8 @@
 from models import Model
 from models.user_role import UserRole
+from secret import salt
+from hashlib import sha256
+# from utiles import log
 
 
 class User(Model):
@@ -18,9 +21,8 @@ class User(Model):
         self.password = form['password']
         self.role = form.get('role', UserRole.normal)
 
-    @classmethod
-    def guest(cls):
-
+    @staticmethod
+    def guest():
         form = dict(
             role=UserRole.guest,
             username='Guest',
@@ -28,6 +30,28 @@ class User(Model):
         )
         u = User(form)
         return u
+
+    @staticmethod
+    def salted_password(password: str) -> str:
+        salted = password + salt
+        hashed = sha256(salted.encode('ascii')).hexdigest()
+        return hashed
+
+    @classmethod
+    def register(cls, form: dict):
+        username: str = form['username']
+        password: str = form['password']
+        index = username.find(' ')
+        if index == -1:
+            status = len(username) > 3 and len(password) > 2
+            if status:
+                form['password'] = cls.salted_password(password)
+                u = User.new(form)
+                result = '注册成功'
+                return u, result
+            else:
+                result = '用户名长度必须大于3且用户名不含有空格，密码长度必须大于2'
+                return User.guest(), result
 
     def is_guest(self):
         return self.role == UserRole.guest

@@ -1,4 +1,5 @@
 import socket
+from models import Model
 from utiles import log
 from request import Request
 from routes import error
@@ -38,6 +39,7 @@ def run(host: str, port: int):
     with socket.socket() as s:
         s.bind((host, port))
         s.listen()
+        Model.init_db()
         while True:
             connection, address = s.accept()
             log('The connector is from: {}'.format(address))
