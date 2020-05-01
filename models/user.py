@@ -43,15 +43,18 @@ class User(Model):
         password: str = form['password']
         index = username.find(' ')
         if index == -1:
-            status = len(username) > 3 and len(password) > 2
+            status = len(username) > 2 and len(password) > 2
             if status:
                 form['password'] = cls.salted_password(password)
                 u = User.new(form)
                 result = '注册成功'
                 return u, result
             else:
-                result = '用户名长度必须大于3且用户名不含有空格，密码长度必须大于2'
+                result = '用户名与密码长度必须大于2'
                 return User.guest(), result
+        else:
+            result = '用户名不允许包含空格'
+            return User.guest(), result
 
-    def is_guest(self):
+    def is_guest(self) -> bool:
         return self.role == UserRole.guest

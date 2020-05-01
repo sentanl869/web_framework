@@ -9,5 +9,5 @@ class UserRole(Enum):
     normal = auto()
     admin = auto()
 
-    def translate(self, _escape_table):
+    def translate(self, _escape_table) -> str:
         return self.name

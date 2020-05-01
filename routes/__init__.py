@@ -52,7 +52,7 @@ def redirect(url: str, headers: dict = None) -> bytes:
 
 
 def error(request, code: int = 404) -> bytes:
-    log('***error', request)
+    log('***error\n', request)
     code = str(code)
     r = {
         '404': b'HTTP/1.1 404 NOT FOUND\r\n\r\n<h1>NOT FOUND</h1>'
