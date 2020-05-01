@@ -6,7 +6,7 @@ from string import (
 )
 from secrets import choice
 from time import time
-from utiles import log
+# from utiles import log
 
 
 def random_string() -> str:
@@ -56,7 +56,6 @@ class Session(Model):
         with cls.connection.cursor() as cursor:
             cursor.execute(sql_find, session_id)
             r = cursor.fetchall()
-            log('***session', r)
             user_id = int(r[0]['user_id'])
             u = User.find_by(id=user_id)
 
