@@ -2,7 +2,7 @@ from models import Model
 from models.user_role import UserRole
 from secret import salt
 from hashlib import sha256
-# from utiles import log
+from utiles import log
 
 
 class User(Model):
@@ -54,6 +54,19 @@ class User(Model):
                 return User.guest(), result
         else:
             result = '用户名不允许包含空格'
+            return User.guest(), result
+
+    @classmethod
+    def login(cls, form: dict):
+        username: str = form['username']
+        password: str = form['password']
+        salted = cls.salted_password(password)
+        u = User.find_by(username=username, password=salted)
+        if u is not None:
+            result = '登录成功'
+            return u, result
+        else:
+            result = '用户名或密码错误'
             return User.guest(), result
 
     def is_guest(self) -> bool:

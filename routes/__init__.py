@@ -5,6 +5,32 @@ from jinja2 import (
     FileSystemLoader
 )
 from utiles import log
+from models.user import User
+from models.session import Session
+
+
+def current_user(request):
+    if 'session_id' in request.cookies:
+        session_id = request.cookies['session_id']
+        user = Session.find_user(session_id)
+        if user is not None:
+            return user
+        else:
+            return User.guest()
+    else:
+        return User.guest()
+
+
+def login_required(route_function):
+    @wraps(route_function)
+    def r(request):
+        user = current_user(request)
+        if user.is_guest():
+            return redirect('/todo/login')
+        else:
+            return route_function(request)
+
+    return r
 
 
 def initialized_render():
@@ -67,13 +93,3 @@ class TemplateRender:
     def render(cls, filename: str, *args, **kwargs) -> str:
         template = cls.e.get_template(filename)
         return template.render(*args, **kwargs)
-
-
-def current_user(request):
-    pass
-
-
-def login_required(route_function):
-    @wraps(route_function)
-    def r():
-        pass

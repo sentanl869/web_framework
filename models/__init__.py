@@ -73,9 +73,7 @@ class Model:
         WHERE
             {}
         '''.format(sql_and)
-        sql_limit = '''
-        LIMIT 1
-        '''
+        sql_limit = 'LIMIT 1;'
         sql_select = '{}{}{}'.format(sql_select, sql_where, sql_limit)
         # log(sql_select)
         values = tuple(kwargs.values())

@@ -4,11 +4,13 @@ import config
 # from utiles import log
 from models.todo import Todo
 from models.user import User
+from models.session import Session
 
 
 def recreate_table(cursor: pymysql.cursors.DictCursor):
     cursor.execute(Todo.sql_create)
     cursor.execute(User.sql_create)
+    cursor.execute(Session.sql_create)
 
 
 def recreate_database():
