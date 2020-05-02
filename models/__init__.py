@@ -54,6 +54,31 @@ class Model:
         return _id
 
     @classmethod
+    def update(cls, _id: int, **kwargs):
+        sql_set = ', '.join(
+            ['`{}`=%s'.format(k) for k in kwargs.keys()]
+        )
+        sql_update = '''
+        UPDATE
+            {}
+        SET
+            {}
+        WHERE
+            `id`=%s
+        '''.format(
+            cls.table_name(),
+            sql_set,
+        )
+        # log(sql_update)
+        values = list(kwargs.values())
+        values.append(_id)
+        values = tuple(values)
+
+        with cls.connection.cursor() as cursor:
+            cursor.execute(sql_update, values)
+        cls.connection.commit()
+
+    @classmethod
     def new(cls, form: dict):
         m = cls(form)
         _id = cls.insert(m.__dict__)

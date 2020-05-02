@@ -21,9 +21,20 @@ class Todo(Model):
         self.updated_time = form['updated_time']
 
     @classmethod
-    def add(cls, form: dict, user_id):
+    def add(cls, form: dict, user_id: int):
         form['user_id'] = user_id
         form['created_time'] = int(time())
         form['updated_time'] = int(time())
         todo = cls.new(form)
+        return todo
+
+    @classmethod
+    def update(cls, _id: int, **kwargs):
+        super().update(
+            _id,
+            title=kwargs['title'],
+            updated_time=int(time())
+        )
+
+        todo = Todo.find_by(id=_id)
         return todo
