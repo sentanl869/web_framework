@@ -2,7 +2,7 @@ from models import Model
 from models.user_role import UserRole
 from secret import salt
 from hashlib import sha256
-from utiles import log
+# from utiles import log
 
 
 class User(Model):

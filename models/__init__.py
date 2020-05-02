@@ -79,6 +79,19 @@ class Model:
         cls.connection.commit()
 
     @classmethod
+    def delete(cls, _id: int):
+        sql_delete = '''
+        DELETE FROM
+            {}
+        WHERE
+            `id`=%s
+        '''.format(cls.table_name())
+        # log(sql_delete)
+        with cls.connection.cursor() as cursor:
+            cursor.execute(sql_delete, (_id,))
+        cls.connection.commit()
+
+    @classmethod
     def new(cls, form: dict):
         m = cls(form)
         _id = cls.insert(m.__dict__)

@@ -4,6 +4,7 @@ from routes import (
     redirect,
     login_required,
     current_user,
+    todo_same_user_required,
 )
 from models.todo import Todo
 
@@ -24,6 +25,7 @@ def add(request):
 
 
 @login_required
+@todo_same_user_required
 def edit(request):
     query = request.query
     todo_id = query['id']
@@ -33,11 +35,21 @@ def edit(request):
 
 
 @login_required
+@todo_same_user_required
 def update(request):
     form = request.form()
     todo_id = int(form['id'])
     title = form['title']
     todo = Todo.update(todo_id, title=title)
+    return redirect('/todo')
+
+
+@login_required
+@todo_same_user_required
+def delete(request):
+    query = request.query
+    todo_id = int(query['id'])
+    Todo.delete(todo_id)
     return redirect('/todo')
 
 
@@ -47,5 +59,6 @@ def route_dict() -> dict:
         '/todo/add': add,
         '/todo/edit': edit,
         '/todo/update': update,
+        '/todo/delete': delete,
     }
     return d

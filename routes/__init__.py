@@ -6,6 +6,7 @@ from jinja2 import (
 )
 from utiles import log
 from models.user import User
+from models.todo import Todo
 from models.session import Session
 
 
@@ -29,6 +30,24 @@ def login_required(route_function):
             return redirect('/todo/login')
         else:
             return route_function(request)
+
+    return r
+
+
+def todo_same_user_required(route_function):
+    @wraps(route_function)
+    def r(request):
+        user = current_user(request)
+        if 'id' in request.query:
+            todo_id = request.query['id']
+        else:
+            todo_id = request.form()['id']
+
+        todo = Todo.find_by(id=int(todo_id))
+        if todo.user_id == user.id:
+            return route_function(request)
+        else:
+            return redirect('/todo/login')
 
     return r
 

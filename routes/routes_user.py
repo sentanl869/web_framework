@@ -26,24 +26,30 @@ def register_view(request) -> bytes:
 
 
 def register(request) -> bytes:
-    form = request.form()
-    user, result = User.register(form)
-    return redirect('/todo/register?result={}'.format(result))
+    if request.method == 'POST':
+        form = request.form()
+        user, result = User.register(form)
+        return redirect('/todo/register?result={}'.format(result))
+    else:
+        return redirect('/todo/register')
 
 
 def login(request) -> bytes:
-    form = request.form()
-    user, result = User.login(form)
+    if request.method == 'POST':
+        form = request.form()
+        user, result = User.login(form)
 
-    if user.is_guest():
-        return redirect('/todo/login?result={}'.format(result))
+        if user.is_guest():
+            return redirect('/todo/login?result={}'.format(result))
+        else:
+            session_id = Session.save(user.id)
+            header = {
+                'Set-Cookie': 'session_id={}; path=/'.format(session_id)
+            }
+
+            return redirect('/todo', header)
     else:
-        session_id = Session.save(user.id)
-        header = {
-            'Set-Cookie': 'session_id={}; path=/'.format(session_id)
-        }
-
-        return redirect('/todo/login?result={}'.format(result), header)
+        return redirect('/todo/login')
 
 
 def route_dict() -> dict:

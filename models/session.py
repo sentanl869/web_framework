@@ -15,6 +15,12 @@ def random_string() -> str:
     return r
 
 
+def expired(expired_time: int) -> bool:
+    now = int(time())
+    result = expired_time < now
+    return result
+
+
 class Session(Model):
     sql_create = '''
     CREATE TABLE `session` (
@@ -26,7 +32,7 @@ class Session(Model):
     )'''
 
     @classmethod
-    def save(cls, user_id, expired: int = 3600):
+    def save(cls, user_id, _expired: int = 3600):
         sql_insert = '''
         INSERT INTO
             `session` (`session_id`, `user_id`, `expired_time`)
@@ -35,7 +41,7 @@ class Session(Model):
         '''
 
         with cls.connection.cursor() as cursor:
-            expired_time = time() + expired
+            expired_time = int(time()) + _expired
             session_id = random_string()
             cursor.execute(sql_insert, (session_id, user_id, expired_time))
         cls.connection.commit()
@@ -46,7 +52,7 @@ class Session(Model):
     def find_user(cls, session_id):
         sql_find = '''
         SELECT
-            `user_id`
+            `user_id`, `expired_time`
         FROM
             `session`
         WHERE
@@ -57,6 +63,10 @@ class Session(Model):
             cursor.execute(sql_find, session_id)
             r = cursor.fetchall()
             user_id = int(r[0]['user_id'])
-            u = User.find_by(id=user_id)
+            expired_time = int(r[0]['expired_time'])
+            if expired(expired_time):
+                u = User.guest()
+            else:
+                u = User.find_by(id=user_id)
 
         return u
