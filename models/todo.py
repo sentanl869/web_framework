@@ -1,4 +1,5 @@
 from models import Model
+from time import time
 
 
 class Todo(Model):
@@ -14,6 +15,15 @@ class Todo(Model):
 
     def __init__(self, form: dict):
         super().__init__(form)
+        self.title = form['title']
         self.user_id = form['user_id']
         self.created_time = form['created_time']
         self.updated_time = form['updated_time']
+
+    @classmethod
+    def add(cls, form: dict, user_id):
+        form['user_id'] = user_id
+        form['created_time'] = int(time())
+        form['updated_time'] = int(time())
+        todo = cls.new(form)
+        return todo
