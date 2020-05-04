@@ -1,4 +1,4 @@
-import socket
+from socket import socket
 from models import Model
 from utiles import log
 from request import Request
@@ -17,7 +17,7 @@ def response_for_path(request):
     return response(request)
 
 
-def process_connection(connection: socket.socket):
+def process_connection(connection: socket):
     with connection:
         buffer_size = 1024
         request = b''
@@ -25,7 +25,7 @@ def process_connection(connection: socket.socket):
         if len(r) > 0:
             request += r
             if len(r) < buffer_size:
-                log(request)
+                # log(request)
                 # log(request.decode())
                 request = request.decode()
                 r = Request(request)
@@ -36,7 +36,7 @@ def process_connection(connection: socket.socket):
 
 def run(host: str, port: int):
     log('The server is running at: {}:{}'.format(host, port))
-    with socket.socket() as s:
+    with socket() as s:
         s.bind((host, port))
         s.listen()
         Model.init_db()
