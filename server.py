@@ -1,4 +1,5 @@
 from socket import socket
+from threading import Thread
 from models import Model
 from utiles import log
 from request import Request
@@ -43,7 +44,8 @@ def run(host: str, port: int):
         while True:
             connection, address = s.accept()
             log('The connector is from: {}'.format(address))
-            process_connection(connection)
+            # process_connection(connection)
+            Thread(target=process_connection, args=(connection,)).start()
 
 
 def main():
