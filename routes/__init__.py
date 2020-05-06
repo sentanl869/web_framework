@@ -38,7 +38,7 @@ def todo_same_user_required(route_function):
     @wraps(route_function)
     def r(request):
         user = current_user(request)
-        if 'id' in request.query:
+        if request.method == 'GET':
             todo_id = request.query['id']
         else:
             todo_id = request.form()['id']

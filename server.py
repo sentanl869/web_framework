@@ -4,6 +4,7 @@ from models import Model
 from utiles import log
 from request import Request
 from routes import error
+from routes.routes_public import route_dict as public_routes
 from routes.routes_todo import route_dict as todo_routes
 from routes.routes_user import route_dict as user_routes
 
@@ -11,6 +12,7 @@ from routes.routes_user import route_dict as user_routes
 def response_for_path(request):
 
     r = dict()
+    r.update(public_routes())
     r.update(todo_routes())
     r.update(user_routes())
 
