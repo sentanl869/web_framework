@@ -49,7 +49,6 @@ def generate_user():
         password='1231234',
     )
     User.register(d)
-    User.connection.close()
 
 
 if __name__ == '__main__':

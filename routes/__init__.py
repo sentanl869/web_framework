@@ -2,7 +2,7 @@ from os import path
 from functools import wraps
 from jinja2 import (
     Environment,
-    FileSystemLoader
+    FileSystemLoader,
 )
 from utiles import log
 from models.user import User
