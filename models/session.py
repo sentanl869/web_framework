@@ -62,11 +62,14 @@ class Session(Model):
         with cls.connection.cursor() as cursor:
             cursor.execute(sql_find, session_id)
             r = cursor.fetchall()
-            user_id = int(r[0]['user_id'])
-            expired_time = int(r[0]['expired_time'])
-            if expired(expired_time):
-                u = User.guest()
+            if len(r) > 0:
+                user_id = int(r[0]['user_id'])
+                expired_time = int(r[0]['expired_time'])
+                if not expired(expired_time):
+                    u = User.find_by(id=user_id)
+                else:
+                    u = User.guest()
             else:
-                u = User.find_by(id=user_id)
+                u = User.guest()
 
         return u
