@@ -2,6 +2,7 @@ import pymysql
 import secret
 import config
 # from utiles import log
+from models import Model
 from models.todo import Todo
 from models.user import User
 from models.session import Session
@@ -41,5 +42,16 @@ def recreate_database():
     connection.close()
 
 
+def generate_user():
+    Model.init_db()
+    d = dict(
+        username='test',
+        password='1231234',
+    )
+    User.register(d)
+    User.connection.close()
+
+
 if __name__ == '__main__':
     recreate_database()
+    generate_user()
