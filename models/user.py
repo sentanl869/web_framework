@@ -41,19 +41,24 @@ class User(Model):
     def register(cls, form: dict):
         username: str = form['username']
         password: str = form['password']
-        index = username.find(' ')
-        if index == -1:
-            status = len(username) > 2 and len(password) > 2
-            if status:
-                form['password'] = cls.salted_password(password)
-                u = User.new(form)
-                result = '注册成功'
-                return u, result
+        statue = User.find_by(username=username)
+        if statue is None:
+            index = username.find(' ')
+            if index == -1:
+                status = len(username) > 2 and len(password) > 2
+                if status:
+                    form['password'] = cls.salted_password(password)
+                    u = User.new(form)
+                    result = '注册成功'
+                    return u, result
+                else:
+                    result = '用户名与密码长度必须大于2'
+                    return User.guest(), result
             else:
-                result = '用户名与密码长度必须大于2'
+                result = '用户名不允许包含空格'
                 return User.guest(), result
         else:
-            result = '用户名不允许包含空格'
+            result = '该用户名已经存在'
             return User.guest(), result
 
     @classmethod
