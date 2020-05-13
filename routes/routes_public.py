@@ -1,18 +1,20 @@
 from os import path
 
 
-def css_static(request) -> bytes:
+def static(request) -> bytes:
     filename = request.query['file']
+    _path = request.path.split('/')
     dictionary = path.dirname(path.dirname(__file__))
-    css_path = path.join(dictionary, 'static', 'css', filename)
-    with open(css_path, 'rb') as f:
-        header = b'HTTP/1.1 200 OK\r\nContent-Type: text/css\r\n\r\n'
-        css = header + f.read()
-        return css
+    file_path = path.join(dictionary, _path[1], _path[2], filename)
+    with open(file_path, 'rb') as f:
+        header = b'HTTP/1.1 200 OK\r\n\r\n'
+        file = header + f.read()
+        return file
 
 
 def route_dict() -> dict:
     d = {
-        '/static/css': css_static
+        '/static/css': static,
+        '/static/js': static,
     }
     return d
