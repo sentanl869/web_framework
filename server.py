@@ -7,6 +7,7 @@ from routes import error
 from routes.routes_public import route_dict as public_routes
 from routes.routes_todo import route_dict as todo_routes
 from routes.routes_user import route_dict as user_routes
+from routes.api_todo import route_dict as api_todo_routes
 
 
 def response_for_path(request):
@@ -15,6 +16,7 @@ def response_for_path(request):
     r.update(public_routes())
     r.update(todo_routes())
     r.update(user_routes())
+    r.update(api_todo_routes())
 
     response = r.get(request.path, error)
     return response(request)

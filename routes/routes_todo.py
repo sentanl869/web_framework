@@ -12,8 +12,9 @@ from models.todo import Todo
 @login_required
 def index(request) -> bytes:
     user = current_user(request)
-    todos = Todo.find_all(user_id = user.id)
-    body = TemplateRender.render('todo_index.html', todos=todos)
+    todos = Todo.find_all(user_id=user.id)
+    # body = TemplateRender.render('todo_index.html', todos=todos)
+    body = TemplateRender.render('todo_ajax.html', todos=todos)
     return html_response(body)
 
 
@@ -56,10 +57,11 @@ def delete(request):
 
 def route_dict() -> dict:
     d = {
-        '/todo': index,
-        '/todo/add': add,
-        '/todo/edit': edit,
-        '/todo/update': update,
-        '/todo/delete': delete,
+        '/': index,
+        # '/todo': index,
+        # '/todo/add': add,
+        # '/todo/edit': edit,
+        # '/todo/update': update,
+        # '/todo/delete': delete,
     }
     return d

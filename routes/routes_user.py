@@ -36,7 +36,7 @@ def register(request) -> bytes:
             header = {
                 'Set-Cookie': 'session_id={}; path=/'.format(session_id)
             }
-            return redirect('/todo', header)
+            return redirect('/', header)
     else:
         return redirect('/todo/register')
 
@@ -54,7 +54,7 @@ def login(request) -> bytes:
                 'Set-Cookie': 'session_id={}; path=/'.format(session_id)
             }
 
-            return redirect('/todo', header)
+            return redirect('/', header)
     else:
         return redirect('/todo/login')
 

@@ -151,3 +151,12 @@ class Model:
                 m = cls(line)
                 ms.append(m)
             return ms
+
+    def json(self):
+        return self.__dict__
+
+    @classmethod
+    def json_all(cls, user_id: int = None):
+        ms = cls.find_all(user_id=user_id)
+        js = [m.json() for m in ms]
+        return js
