@@ -1,5 +1,6 @@
 from os import path
 from functools import wraps
+from json import dumps
 from jinja2 import (
     Environment,
     FileSystemLoader,
@@ -52,14 +53,6 @@ def todo_same_user_required(route_function):
     return r
 
 
-def initialized_render():
-    dictionary = path.dirname(path.dirname(__file__))
-    template_path = path.join(dictionary, 'templates')
-    loader = FileSystemLoader(template_path)
-    e = Environment(loader=loader)
-    return e
-
-
 def formatted_header(headers: dict, code: int = 200) -> str:
     header = 'HTTP/1.1 {} OK\r\n'.format(code)
     header += ''.join(
@@ -82,6 +75,21 @@ def html_response(body: str, headers: dict = None) -> bytes:
     return r.encode()
 
 
+def json_response(data, headers: dict = None) -> bytes:
+    h = {
+        'Content-Type': 'application/json',
+    }
+    if headers is None:
+        headers = h
+    else:
+        headers.update(h)
+
+    header = formatted_header(headers)
+    body = dumps(data, ensure_ascii=False, indent=2)
+    r = header + '\r\n' + body
+    return r.encode()
+
+
 def redirect(url: str, headers: dict = None) -> bytes:
     h = {
         'Location': url,
@@ -97,12 +105,20 @@ def redirect(url: str, headers: dict = None) -> bytes:
 
 
 def error(request, code: int = 404) -> bytes:
-    log('***error\n', request)
+    log('***error:\n', request)
     code = str(code)
     r = {
         '404': b'HTTP/1.1 404 NOT FOUND\r\n\r\n<h1>NOT FOUND</h1>'
     }
     return r.get(code, b'')
+
+
+def initialized_render():
+    dictionary = path.dirname(path.dirname(__file__))
+    template_path = path.join(dictionary, 'templates')
+    loader = FileSystemLoader(template_path)
+    e = Environment(loader=loader)
+    return e
 
 
 class TemplateRender:

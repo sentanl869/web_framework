@@ -1,5 +1,6 @@
 # from utiles import log
 from urllib.parse import unquote_plus
+from json import loads
 
 
 class Request:
@@ -59,3 +60,6 @@ class Request:
             k, v = arg.split('=')
             form[k] = v
         return form
+
+    def json(self):
+        return loads(self.body)
