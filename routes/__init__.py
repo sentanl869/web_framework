@@ -53,6 +53,24 @@ def todo_same_user_required(route_function):
     return r
 
 
+def api_todo_same_user_required(route_function):
+    @wraps(route_function)
+    def r(request):
+        user = current_user(request)
+        if request.method == 'GET':
+            todo_id = request.query['id']
+        else:
+            todo_id = request.json()['id']
+
+        todo = Todo.find_by(id=int(todo_id))
+        if todo.user_id == user.id:
+            return route_function(request)
+        else:
+            return redirect('/todo/login')
+
+    return r
+
+
 def formatted_header(headers: dict, code: int = 200) -> str:
     header = 'HTTP/1.1 {} OK\r\n'.format(code)
     header += ''.join(

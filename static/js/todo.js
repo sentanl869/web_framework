@@ -32,6 +32,11 @@ let apiTodoDelete = function (todoId, callback) {
     ajax('GET', path, '', callback);
 };
 
+let apiTodoUpdate = function (form, callback) {
+    let path = '/api/todo/update';
+    ajax('POST', path, form, callback);
+};
+
 let insertTodo = function (todo) {
     let todoCell = todoTemplate(todo);
     let todoList = document.querySelector('#id-todo-list');
@@ -40,7 +45,7 @@ let insertTodo = function (todo) {
 
 let insertEditForm = function (title, todoCell) {
     let editForm = todoEditTemplate(title);
-    todoCell.insertAdjacentHTML('beforeend', editForm)
+    todoCell.insertAdjacentHTML('beforeend', editForm);
 };
 
 let loadTodos = function () {
@@ -93,10 +98,36 @@ let bindEventTodoEdit = function () {
     });
 };
 
+let bindEventTodoUpdate = function () {
+    let bind = document.querySelector('#id-todo-list');
+    bind.addEventListener('click', function (event) {
+        let self = event.target;
+        if (self.classList.contains('todo-update')) {
+            let todoCell = self.closest('.todo-cell');
+            let todoId = todoCell.dataset['id'];
+            let updateContent = todoCell.querySelector('.todo-update-input');
+            let title = updateContent.value;
+            let form = {
+                id: todoId,
+                title: title,
+            };
+            apiTodoUpdate(form, function (todo) {
+                let todoSpan = todoCell.querySelector('.todo-title');
+                todoSpan.innerText = todo.title;
+                let editForm = todoCell.querySelector('.todo-update-form');
+                editForm.remove();
+                let editButton = todoCell.querySelector('.todo-edit');
+                editButton.disabled = false;
+            });
+        }
+    });
+};
+
 let bindEventTodo = function () {
     bindEventTodoAdd();
     bindEventTodoDelete();
     bindEventTodoEdit();
+    bindEventTodoUpdate();
 };
 
 let __main = function () {
