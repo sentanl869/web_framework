@@ -1,24 +1,11 @@
-from models import Model
-from models.user import User
-from string import (
-    ascii_letters,
-    digits,
+from models import (
+    Model,
+    random_string,
+    expired,
 )
-from secrets import choice
+from models.user import User
 from time import time
 # from utiles import log
-
-
-def random_string() -> str:
-    seed = ascii_letters + digits
-    r = ''.join(choice(seed) for i in range(16))
-    return r
-
-
-def expired(expired_time: int) -> bool:
-    now = int(time())
-    result = expired_time < now
-    return result
 
 
 class Session(Model):

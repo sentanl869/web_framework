@@ -19,7 +19,7 @@ def index(request) -> bytes:
 
 
 @login_required
-def add(request):
+def add(request) -> bytes:
     form = request.form()
     user = current_user(request)
     todo = Todo.add(form, user.id)
@@ -28,7 +28,7 @@ def add(request):
 
 @login_required
 @todo_same_user_required
-def edit(request):
+def edit(request) -> bytes:
     query = request.query
     todo_id = query['id']
     todo = Todo.find_by(id=todo_id)
@@ -38,7 +38,7 @@ def edit(request):
 
 @login_required
 @todo_same_user_required
-def update(request):
+def update(request) -> bytes:
     form = request.form()
     todo_id = int(form['id'])
     title = form['title']
@@ -48,7 +48,7 @@ def update(request):
 
 @login_required
 @todo_same_user_required
-def delete(request):
+def delete(request) -> bytes:
     query = request.query
     todo_id = int(query['id'])
     Todo.delete(todo_id)

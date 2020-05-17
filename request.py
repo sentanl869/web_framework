@@ -61,5 +61,5 @@ class Request:
             form[k] = v
         return form
 
-    def json(self):
+    def json(self) -> dict:
         return loads(self.body)

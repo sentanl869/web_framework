@@ -1,7 +1,25 @@
 import pymysql
 import secret
 import config
+import time
+import secrets
 # from utiles import log
+from string import (
+    ascii_letters,
+    digits,
+)
+
+
+def random_string() -> str:
+    seed = ascii_letters + digits
+    r = ''.join(secrets.choice(seed) for i in range(16))
+    return r
+
+
+def expired(expired_time: int) -> bool:
+    now = int(time.time())
+    result = expired_time < now
+    return result
 
 
 class Model:
@@ -152,11 +170,11 @@ class Model:
                 ms.append(m)
             return ms
 
-    def json(self):
+    def json(self) -> dict:
         return self.__dict__
 
     @classmethod
-    def json_all(cls, user_id: int = None):
+    def json_all(cls, user_id: int = None) -> list:
         ms = cls.find_all(user_id=user_id)
         js = [m.json() for m in ms]
         return js
