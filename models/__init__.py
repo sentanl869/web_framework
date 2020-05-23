@@ -137,9 +137,7 @@ class Model:
         with cls.connection.cursor() as cursor:
             cursor.execute(sql_select, values)
             result = cursor.fetchone()
-            if result is None:
-                return None
-            else:
+            if result is not None:
                 return cls(result)
 
     @classmethod
@@ -165,10 +163,11 @@ class Model:
         with cls.connection.cursor() as cursor:
             cursor.execute(sql_select, values)
             result = cursor.fetchall()
-            for line in result:
-                m = cls(line)
-                ms.append(m)
-            return ms
+            if result is not None:
+                for line in result:
+                    m = cls(line)
+                    ms.append(m)
+                return ms
 
     def json(self) -> dict:
         return self.__dict__

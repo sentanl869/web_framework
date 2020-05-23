@@ -33,43 +33,57 @@ class User(Model):
 
     @staticmethod
     def salted_password(password: str) -> str:
+        password = sha256(password.encode('ascii')).hexdigest()
         salted = password + salt
         hashed = sha256(salted.encode('ascii')).hexdigest()
         return hashed
 
+    @staticmethod
+    def register_check(username: str, password: str) -> tuple:
+        user = User.find_by(username=username)
+        if user is not None:
+            error_code = '1'
+            return False, error_code
+        status = username.find(' ')
+        if status != -1:
+            error_code = '2'
+            return False, error_code
+        username_length = len(username)
+        if username_length < 2:
+            error_code = '3'
+            return False, error_code
+        password_length = len(password)
+        if password_length < 2:
+            error_code = '3'
+            return False, error_code
+        return True, ''
+
     @classmethod
-    def register(cls, form: dict):
+    def register(cls, form: dict) -> tuple:
         username: str = form['username']
         password: str = form['password']
-        statue = User.find_by(username=username)
-        if statue is None:
-            index = username.find(' ')
-            if index == -1:
-                status = len(username) > 2 and len(password) > 2
-                if status:
-                    form['password'] = cls.salted_password(password)
-                    u = User.new(form)
-                    result = '注册成功'
-                    return u, result
-                else:
-                    result = '用户名与密码长度必须大于2'
-                    return User.guest(), result
-            else:
-                result = '用户名不允许包含空格'
-                return User.guest(), result
+        check_passed, error_code = cls.register_check(username=username, password=password)
+        if check_passed:
+            form['password'] = cls.salted_password(password)
+            u = User.new(form)
+            return u, ''
         else:
-            result = '该用户名已经存在'
+            error_message = {
+                '1': '该用户名已存在',
+                '2': '用户名不允许包含空格',
+                '3': '用户名和密码长度必须大于2',
+            }
+            result = error_message.get(error_code, '未知错误')
             return User.guest(), result
 
     @classmethod
-    def login(cls, form: dict):
+    def login(cls, form: dict) -> tuple:
         username: str = form['username']
         password: str = form['password']
         salted = cls.salted_password(password)
         u = User.find_by(username=username, password=salted)
         if u is not None:
-            result = '登录成功'
-            return u, result
+            return u, ''
         else:
             result = '用户名或密码错误'
             return User.guest(), result
