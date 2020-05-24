@@ -1,10 +1,10 @@
 let todoTemplate = function (todo) {
     return`
-        <div class="todo-cell" data-id="${todo.id}">
+        <li class="todo-cell" data-id="${todo.id}">
             <span class="todo-title">${todo.title}</span>
             <button class="todo-edit">编辑</button>
             <button class="todo-delete">完成</button>
-        </div>
+        </li>
     `;
 };
 
@@ -67,6 +67,7 @@ let bindEventTodoAdd = function () {
         };
         apiTodoAdd(form, function (todo) {
             insertTodo(todo);
+            input.value = '';
         });
     });
 };
