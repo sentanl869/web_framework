@@ -10,9 +10,9 @@ from string import (
 )
 
 
-def random_string() -> str:
+def random_string(random_range: int = 16) -> str:
     seed = ascii_letters + digits
-    r = ''.join(secrets.choice(seed) for i in range(16))
+    r = ''.join(secrets.choice(seed) for i in range(random_range))
     return r
 
 
