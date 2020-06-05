@@ -46,7 +46,7 @@ class Request:
             args = query_content.split('&')
             query = dict()
             for arg in args:
-                k, v = arg.split('=')
+                k, v = arg.split('=', 1)
                 query[k] = v
 
             self.path = path
@@ -57,7 +57,7 @@ class Request:
         args = body.split('&')
         form = dict()
         for arg in args:
-            k, v = arg.split('=')
+            k, v = arg.split('=', 1)
             form[k] = v
         return form
 

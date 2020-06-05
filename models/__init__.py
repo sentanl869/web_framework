@@ -1,25 +1,59 @@
 import pymysql
 import secret
 import config
-import time
-import secrets
-# from utiles import log
+from time import time
+from secrets import choice
+from hashlib import sha256
+from base64 import (
+    b64encode,
+    b64decode,
+)
 from string import (
     ascii_letters,
     digits,
 )
+# from utiles import log
 
 
 def random_string(random_range: int = 16) -> str:
     seed = ascii_letters + digits
-    r = ''.join(secrets.choice(seed) for i in range(random_range))
+    r = ''.join(choice(seed) for i in range(random_range))
     return r
 
 
 def expired(expired_time: int) -> bool:
-    now = int(time.time())
+    now = int(time())
     result = expired_time < now
     return result
+
+
+def signature_created(message: str) -> str:
+    content = message + secret.token_key
+    result = sha256(content.encode('ascii')).hexdigest()
+    return result
+
+
+def token_created(user_id, _expired: int = 3600):
+    user_str = str(user_id)
+    expired_time = int(time()) + _expired
+    message = ';'.join([user_str, str(expired_time)])
+    signature = signature_created(message)
+    message_base64 = b64encode(message.encode())
+    signature_base64 = b64encode(signature.encode())
+    token = '.'.join([message_base64.decode(), signature_base64.decode()])
+    return token
+
+
+def token_checked(_id: int, token: str) -> bool:
+    message_base64, signature_base64 = token.split('.', 1)
+    message = b64decode(message_base64.encode())
+    message = message.decode()
+    user_id, expired_time = message.split(';', 1)
+    signature = signature_created(message)
+    signature_check = b64decode(signature_base64.encode())
+    signature_check = signature_check.decode()
+
+    return _id == int(user_id) and not expired(int(expired_time)) and signature == signature_check
 
 
 class Model:

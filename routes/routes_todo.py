@@ -5,7 +5,9 @@ from routes import (
     login_required,
     current_user,
     todo_same_user_required,
+    csrf_token_required,
 )
+from models import token_created
 from models.todo import Todo
 
 
@@ -20,12 +22,14 @@ def ajax_index(request) -> bytes:
 @login_required
 def index(request) -> bytes:
     user = current_user(request)
+    token = token_created(user.id)
     todos = Todo.find_all(user_id=user.id)
-    body = TemplateRender.render('todo_index.html', todos=todos)
+    body = TemplateRender.render('todo_index.html', todos=todos, token=token)
     return html_response(body)
 
 
 @login_required
+@csrf_token_required
 def add(request) -> bytes:
     form = request.form()
     user = current_user(request)
@@ -34,16 +38,20 @@ def add(request) -> bytes:
 
 
 @login_required
+@csrf_token_required
 @todo_same_user_required
 def edit(request) -> bytes:
     query = request.query
     todo_id = query['id']
+    user = current_user(request)
+    token = token_created(user.id)
     todo = Todo.find_by(id=todo_id)
-    body = TemplateRender.render('todo_edit.html', todo=todo)
+    body = TemplateRender.render('todo_edit.html', todo=todo, token=token)
     return html_response(body)
 
 
 @login_required
+@csrf_token_required
 @todo_same_user_required
 def update(request) -> bytes:
     form = request.form()
@@ -54,6 +62,7 @@ def update(request) -> bytes:
 
 
 @login_required
+@csrf_token_required
 @todo_same_user_required
 def delete(request) -> bytes:
     query = request.query

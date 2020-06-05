@@ -26,17 +26,19 @@ def process_connection(connection: socket):
     with connection:
         buffer_size = 1024
         request = b''
-        r = connection.recv(buffer_size)
-        if len(r) > 0:
-            request += r
-            if len(r) < buffer_size:
-                # log(request)
-                # log(request.decode())
-                request = request.decode()
-                r = Request(request)
+        while True:
+            r = connection.recv(buffer_size)
+            if len(r) > 0:
+                request += r
+                if len(r) < buffer_size:
+                    # log(request)
+                    # log(request.decode())
+                    request = request.decode()
+                    r = Request(request)
+                    break
 
-            response = response_for_path(r)
-            connection.sendall(response)
+        response = response_for_path(r)
+        connection.sendall(response)
 
 
 def run(host: str, port: int):

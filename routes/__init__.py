@@ -6,6 +6,7 @@ from jinja2 import (
     FileSystemLoader,
 )
 from utiles import log
+from models import token_checked
 from models.user import User
 from models.todo import Todo
 from models.session import Session
@@ -21,6 +22,23 @@ def current_user(request):
             return User.guest()
     else:
         return User.guest()
+
+
+def csrf_token_required(route_function):
+    @wraps(route_function)
+    def r(request):
+        if request.method == 'GET':
+            token = request.query['token']
+        else:
+            token = request.form()['token']
+
+        u = current_user(request)
+        if token_checked(u.id, token):
+            return route_function(request)
+        else:
+            return redirect('/todo')
+
+    return r
 
 
 def login_required(route_function):
