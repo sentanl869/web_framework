@@ -5,7 +5,7 @@ from jinja2 import (
     Environment,
     FileSystemLoader,
 )
-from utiles import log
+# from utiles import log
 from models import token_checked
 from models.user import User
 from models.todo import Todo
@@ -64,7 +64,6 @@ def redirect(url: str, headers: dict = None) -> bytes:
 
 
 def error(request, code: int = 404) -> bytes:
-    log('***error:\n', request)
     code = str(code)
     r = {
         '403': b'HTTP/1.1 403 Forbidden\r\n\r\n<h1>403 FORBIDDEN</h1>',
@@ -114,7 +113,7 @@ def token_required(route_function):
         if token_checked(u.id, token):
             return route_function(request)
         else:
-            return error(403)
+            return error(request, 403)
 
     return r
 
@@ -127,7 +126,7 @@ def api_token_required(route_function):
         if token_checked(u.id, token):
             return route_function(request)
         else:
-            return error(403)
+            return error(request, 403)
 
     return r
 

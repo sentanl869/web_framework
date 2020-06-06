@@ -53,7 +53,10 @@ def token_checked(_id: int, token: str) -> bool:
     signature_check = b64decode(signature_base64.encode())
     signature_check = signature_check.decode()
 
-    return _id == int(user_id) and not expired(int(expired_time)) and signature == signature_check
+    try:
+        return _id == int(user_id) and not expired(int(expired_time)) and signature == signature_check
+    except ValueError:
+        return False
 
 
 class Model:
