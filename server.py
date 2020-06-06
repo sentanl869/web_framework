@@ -31,11 +31,11 @@ def process_connection(connection: socket):
             if len(r) > 0:
                 request += r
                 if len(r) < buffer_size:
-                    # log(request)
-                    # log(request.decode())
                     request = request.decode()
                     r = Request(request)
                     break
+            else:
+                break
 
         response = response_for_path(r)
         connection.sendall(response)
