@@ -33,7 +33,6 @@ def process_connection(connection: socket):
                 if len(r) < buffer_size:
                     request = request.decode()
                     r = Request(request)
-                    log(r.headers)
                     break
             else:
                 break
