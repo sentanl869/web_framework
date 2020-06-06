@@ -5,7 +5,7 @@ from routes import (
     login_required,
     current_user,
     todo_same_user_required,
-    csrf_token_required,
+    token_required,
 )
 from models import token_created
 from models.todo import Todo
@@ -14,8 +14,9 @@ from models.todo import Todo
 @login_required
 def ajax_index(request) -> bytes:
     user = current_user(request)
+    token = token_created(user.id)
     todos = Todo.find_all(user_id=user.id)
-    body = TemplateRender.render('todo_ajax.html', todos=todos)
+    body = TemplateRender.render('todo_ajax.html', todos=todos, token=token)
     return html_response(body)
 
 
@@ -29,7 +30,7 @@ def index(request) -> bytes:
 
 
 @login_required
-@csrf_token_required
+@token_required
 def add(request) -> bytes:
     form = request.form()
     user = current_user(request)
@@ -38,7 +39,7 @@ def add(request) -> bytes:
 
 
 @login_required
-@csrf_token_required
+@token_required
 @todo_same_user_required
 def edit(request) -> bytes:
     query = request.query
@@ -51,7 +52,7 @@ def edit(request) -> bytes:
 
 
 @login_required
-@csrf_token_required
+@token_required
 @todo_same_user_required
 def update(request) -> bytes:
     form = request.form()
@@ -62,7 +63,7 @@ def update(request) -> bytes:
 
 
 @login_required
-@csrf_token_required
+@token_required
 @todo_same_user_required
 def delete(request) -> bytes:
     query = request.query

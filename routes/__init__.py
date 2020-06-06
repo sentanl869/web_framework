@@ -12,83 +12,6 @@ from models.todo import Todo
 from models.session import Session
 
 
-def current_user(request):
-    if 'session_id' in request.cookies:
-        session_id = request.cookies['session_id']
-        user = Session.find_user(session_id)
-        if user is not None:
-            return user
-        else:
-            return User.guest()
-    else:
-        return User.guest()
-
-
-def csrf_token_required(route_function):
-    @wraps(route_function)
-    def r(request):
-        if request.method == 'GET':
-            token = request.query['token']
-        else:
-            token = request.form()['token']
-
-        u = current_user(request)
-        if token_checked(u.id, token):
-            return route_function(request)
-        else:
-            return redirect('/todo')
-
-    return r
-
-
-def login_required(route_function):
-    @wraps(route_function)
-    def r(request):
-        user = current_user(request)
-        if user.is_guest():
-            return redirect('/todo/login')
-        else:
-            return route_function(request)
-
-    return r
-
-
-def todo_same_user_required(route_function):
-    @wraps(route_function)
-    def r(request):
-        user = current_user(request)
-        if request.method == 'GET':
-            todo_id = request.query['id']
-        else:
-            todo_id = request.form()['id']
-
-        todo = Todo.find_by(id=int(todo_id))
-        if todo.user_id == user.id:
-            return route_function(request)
-        else:
-            return redirect('/todo/login')
-
-    return r
-
-
-def api_todo_same_user_required(route_function):
-    @wraps(route_function)
-    def r(request):
-        user = current_user(request)
-        if request.method == 'GET':
-            todo_id = request.query['id']
-        else:
-            todo_id = request.json()['id']
-
-        todo = Todo.find_by(id=int(todo_id))
-        if todo.user_id == user.id:
-            return route_function(request)
-        else:
-            return redirect('/todo/login')
-
-    return r
-
-
 def formatted_header(headers: dict, code: int = 200) -> str:
     header = 'HTTP/1.1 {} OK\r\n'.format(code)
     header += ''.join(
@@ -144,7 +67,8 @@ def error(request, code: int = 404) -> bytes:
     log('***error:\n', request)
     code = str(code)
     r = {
-        '404': b'HTTP/1.1 404 NOT FOUND\r\n\r\n<h1>NOT FOUND</h1>'
+        '403': b'HTTP/1.1 403 Forbidden\r\n\r\n<h1>403 FORBIDDEN</h1>',
+        '404': b'HTTP/1.1 404 Not Found\r\n\r\n<h1>404 NOT FOUND</h1>',
     }
     return r.get(code, b'')
 
@@ -164,3 +88,93 @@ class TemplateRender:
     def render(cls, filename: str, *args, **kwargs) -> str:
         template = cls.e.get_template(filename)
         return template.render(*args, **kwargs)
+
+
+def current_user(request):
+    if 'session_id' in request.cookies:
+        session_id = request.cookies['session_id']
+        user = Session.find_user(session_id)
+        if user is not None:
+            return user
+        else:
+            return User.guest()
+    else:
+        return User.guest()
+
+
+def token_required(route_function):
+    @wraps(route_function)
+    def r(request):
+        if request.method == 'GET':
+            token = request.query['token']
+        else:
+            token = request.form()['token']
+
+        u = current_user(request)
+        if token_checked(u.id, token):
+            return route_function(request)
+        else:
+            return error(403)
+
+    return r
+
+
+def api_token_required(route_function):
+    @wraps(route_function)
+    def r(request):
+        u = current_user(request)
+        token = request.headers['X-CSRF-TOKEN']
+        if token_checked(u.id, token):
+            return route_function(request)
+        else:
+            return error(403)
+
+    return r
+
+
+def login_required(route_function):
+    @wraps(route_function)
+    def r(request):
+        user = current_user(request)
+        if user.is_guest():
+            return redirect('/todo/login')
+        else:
+            return route_function(request)
+
+    return r
+
+
+def todo_same_user_required(route_function):
+    @wraps(route_function)
+    def r(request):
+        user = current_user(request)
+        if request.method == 'GET':
+            todo_id = request.query['id']
+        else:
+            todo_id = request.form()['id']
+
+        todo = Todo.find_by(id=int(todo_id))
+        if todo.user_id == user.id:
+            return route_function(request)
+        else:
+            return redirect('/todo/login')
+
+    return r
+
+
+def api_todo_same_user_required(route_function):
+    @wraps(route_function)
+    def r(request):
+        user = current_user(request)
+        if request.method == 'GET':
+            todo_id = request.query['id']
+        else:
+            todo_id = request.json()['id']
+
+        todo = Todo.find_by(id=int(todo_id))
+        if todo.user_id == user.id:
+            return route_function(request)
+        else:
+            return redirect('/todo/login')
+
+    return r

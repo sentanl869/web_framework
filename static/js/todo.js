@@ -17,24 +17,26 @@ let todoEditTemplate = function (title) {
     `;
 };
 
+let token = document.querySelector('meta[name=token]').content;
+
 let apiTodoAll = function (callback) {
     let path = '/api/todo/all';
-    ajax('GET', path, '', callback);
+    ajax('GET', path, '', token, callback);
 };
 
 let apiTodoAdd = function (form, callback) {
     let path = '/api/todo/add';
-    ajax('POST', path, form, callback);
+    ajax('POST', path, form, token, callback);
 };
 
 let apiTodoDelete = function (todoId, callback) {
     let path = `/api/todo/delete?id=${todoId}`;
-    ajax('GET', path, '', callback);
+    ajax('GET', path, '', token, callback);
 };
 
 let apiTodoUpdate = function (form, callback) {
     let path = '/api/todo/update';
-    ajax('POST', path, form, callback);
+    ajax('POST', path, form, token, callback);
 };
 
 let insertTodo = function (todo) {

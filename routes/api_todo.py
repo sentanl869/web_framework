@@ -3,12 +3,14 @@ from routes import (
     current_user,
     login_required,
     api_todo_same_user_required,
+    api_token_required,
 )
 from models.todo import Todo
 # from utiles import log
 
 
 @login_required
+@api_token_required
 def api_all(request) -> bytes:
     u = current_user(request)
     todos = Todo.json_all(u.id)
@@ -16,6 +18,7 @@ def api_all(request) -> bytes:
 
 
 @login_required
+@api_token_required
 def api_add(request) -> bytes:
     form = request.json()
     u = current_user(request)
@@ -24,6 +27,7 @@ def api_add(request) -> bytes:
 
 
 @login_required
+@api_token_required
 @api_todo_same_user_required
 def api_delete(request) -> bytes:
     todo_id = request.query['id']
@@ -33,6 +37,7 @@ def api_delete(request) -> bytes:
 
 
 @login_required
+@api_token_required
 @api_todo_same_user_required
 def api_update(request) -> bytes:
     form: dict = request.json()
