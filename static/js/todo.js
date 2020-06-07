@@ -1,7 +1,8 @@
 let todoTemplate = function (todo) {
+    let content = HTMLEncoder(todo.title);
     return`
         <li class="todo-cell" data-id="${todo.id}">
-            <span class="todo-title">${todo.title}</span>
+            <span class="todo-title">${content}</span>
             <button class="todo-edit">编辑</button>
             <button class="todo-delete">完成</button>
         </li>
