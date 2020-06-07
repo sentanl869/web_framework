@@ -34,7 +34,7 @@ def register(request) -> bytes:
         else:
             session_id = Session.save(user.id)
             header = {
-                'Set-Cookie': 'session_id={}; path=/'.format(session_id)
+                'Set-Cookie': 'session_id={}; HttpOnly; path=/'.format(session_id)
             }
             return redirect('/', header)
     else:
@@ -51,7 +51,7 @@ def login(request) -> bytes:
         else:
             session_id = Session.save(user.id)
             header = {
-                'Set-Cookie': 'session_id={}; path=/'.format(session_id)
+                'Set-Cookie': 'session_id={}; HttpOnly; path=/'.format(session_id)
             }
 
             return redirect('/', header)

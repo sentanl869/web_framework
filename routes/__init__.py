@@ -77,16 +77,16 @@ def initialized_render():
     dictionary = path.dirname(path.dirname(__file__))
     template_path = path.join(dictionary, 'templates')
     loader = FileSystemLoader(template_path)
-    e = Environment(loader=loader)
-    return e
+    env = Environment(loader=loader)
+    return env
 
 
 class TemplateRender:
-    e = initialized_render()
+    env = initialized_render()
 
     @classmethod
     def render(cls, filename: str, *args, **kwargs) -> str:
-        template = cls.e.get_template(filename)
+        template = cls.env.get_template(filename)
         return template.render(*args, **kwargs)
 
 

@@ -41,6 +41,7 @@ def process_connection(connection: socket):
             response = response_for_path(r)
             connection.sendall(response)
         except AttributeError:
+            # log('Error: An empty request.')
             connection.sendall(b'')
 
 
