@@ -196,15 +196,13 @@ class Model:
         # log(sql_select)
         values = tuple(kwargs.values())
 
-        ms = list()
         with cls.connection.cursor() as cursor:
             cursor.execute(sql_select, values)
             result = cursor.fetchall()
             if result is not None:
                 for line in result:
                     m = cls(line)
-                    ms.append(m)
-                return ms
+                    yield m
 
     def json(self) -> dict:
         return self.__dict__
