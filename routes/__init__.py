@@ -104,7 +104,7 @@ def current_user(request) -> User:
 
 def token_required(route_function):
     @wraps(route_function)
-    def r(request):
+    def r(request) -> bytes:
         if request.method == 'GET':
             token = request.query['token']
         else:
@@ -121,7 +121,7 @@ def token_required(route_function):
 
 def api_token_required(route_function):
     @wraps(route_function)
-    def r(request):
+    def r(request) -> bytes:
         u = current_user(request)
         token = request.headers['X-CSRF-TOKEN']
         if token_checked(u.id, token):
@@ -134,7 +134,7 @@ def api_token_required(route_function):
 
 def login_required(route_function):
     @wraps(route_function)
-    def r(request):
+    def r(request) -> bytes:
         user = current_user(request)
         if user.is_guest():
             return redirect('/todo/login')
@@ -146,7 +146,7 @@ def login_required(route_function):
 
 def todo_same_user_required(route_function):
     @wraps(route_function)
-    def r(request):
+    def r(request) -> bytes:
         user = current_user(request)
         if request.method == 'GET':
             todo_id = request.query['id']
@@ -164,7 +164,7 @@ def todo_same_user_required(route_function):
 
 def api_todo_same_user_required(route_function):
     @wraps(route_function)
-    def r(request):
+    def r(request) -> bytes:
         user = current_user(request)
         if request.method == 'GET':
             todo_id = request.query['id']
