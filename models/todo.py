@@ -36,5 +36,5 @@ class Todo(Model):
             updated_time=int(time())
         )
 
-        todo = Todo.find_by(id=_id)
+        todo = cls.find_by(id=_id)
         return todo

@@ -10,7 +10,7 @@ from routes.routes_user import route_dict as user_routes
 from routes.api_todo import route_dict as api_todo_routes
 
 
-def response_for_path(request):
+def response_for_path(request) -> bytes:
 
     r = dict()
     r.update(public_routes())

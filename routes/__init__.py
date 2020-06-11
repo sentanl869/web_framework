@@ -73,7 +73,7 @@ def error(request, code: int = 404) -> bytes:
     return r.get(code, b'')
 
 
-def initialized_render():
+def initialized_render() -> Environment:
     dictionary = path.dirname(path.dirname(__file__))
     template_path = path.join(dictionary, 'templates')
     loader = FileSystemLoader(template_path)

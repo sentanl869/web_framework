@@ -77,11 +77,11 @@ class Model:
         self.id = form.get('id', None)
 
     @classmethod
-    def table_name(cls):
+    def table_name(cls) -> str:
         return '`{}`'.format(cls.__name__).lower()
 
     @classmethod
-    def insert(cls, form: dict):
+    def insert(cls, form: dict) -> int:
         form.pop('id')
         sql_keys = ', '.join(
             ['`{}`'.format(k) for k in form.keys()]

@@ -19,7 +19,7 @@ class Session(Model):
     )'''
 
     @classmethod
-    def save(cls, user_id, _expired: int = 3600):
+    def save(cls, user_id, _expired: int = 3600) -> str:
         sql_insert = '''
         INSERT INTO
             `session` (`session_id`, `user_id`, `expired_time`)
@@ -36,7 +36,7 @@ class Session(Model):
         return session_id
 
     @classmethod
-    def find_user(cls, session_id):
+    def find_user(cls, session_id) -> User:
         sql_find = '''
         SELECT
             `user_id`, `expired_time`
