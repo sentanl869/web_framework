@@ -90,7 +90,7 @@ class TemplateRender:
         return template.render(*args, **kwargs)
 
 
-def current_user(request):
+def current_user(request) -> User:
     if 'session_id' in request.cookies:
         session_id = request.cookies['session_id']
         user = Session.find_user(session_id)
