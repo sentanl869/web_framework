@@ -33,6 +33,7 @@ def process_connection(connection: socket):
                 if len(r) < buffer_size:
                     request = request.decode()
                     r = Request(request)
+                    log(f'Target: {r.path}')
                     break
             else:
                 break
@@ -41,19 +42,19 @@ def process_connection(connection: socket):
             response = response_for_path(r)
             connection.sendall(response)
         except AttributeError:
-            # log('Error: An empty request.')
+            log('Error: An empty request.')
             connection.sendall(b'')
 
 
 def run(host: str, port: int):
-    log('The server is running at: {}:{}'.format(host, port))
+    log(f'The server is running at: {host}:{port}')
     with socket() as s:
         s.bind((host, port))
         s.listen()
         Model.init_db()
         while True:
             connection, address = s.accept()
-            log('The connector is from: {}'.format(address))
+            log(f'Connector: {address}')
             # process_connection(connection)
             Thread(target=process_connection, args=(connection,)).start()
 

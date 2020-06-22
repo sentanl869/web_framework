@@ -13,8 +13,8 @@
     {% for t in todos %}
         <div>
             {{ loop.index }} : {{ t.title|e }}
-            <a href="/todo/edit?id={{ t.id }}&token={{ token }}">编辑</a>
-            <a href="/todo/delete?id={{ t.id }}&token={{ token }}">完成</a>
+            <a href="/todo/edit?id={{ t.id }}&token={{ token }}" title="编辑">编辑</a>
+            <a href="/todo/delete?id={{ t.id }}&token={{ token }}" title="完成">完成</a>
         </div>
     {% endfor %}
 </body>
