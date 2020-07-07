@@ -33,26 +33,32 @@ def signature_created(message: str) -> str:
     return result
 
 
+def base64_created(content: str) -> str:
+    result = b64encode(content.encode())
+    return result.decode()
+
+
+def base64_decoded(content: str) -> str:
+    result = b64decode(content.encode())
+    return result.decode()
+
+
 def token_created(user_id: int, _expired: int = 3600) -> str:
     user_str = str(user_id)
-    expired_time = int(time()) + _expired
+    expired_time: int = int(time()) + _expired
     message = ';'.join([user_str, str(expired_time)])
     signature = signature_created(message)
-    message_base64 = b64encode(message.encode())
-    signature_base64 = b64encode(signature.encode())
-    token = '.'.join([message_base64.decode(), signature_base64.decode()])
+    token = '.'.join([base64_created(message), base64_created(signature)])
     return token
 
 
 def token_checked(_id: int, token: str) -> bool:
     try:
         message_base64, signature_base64 = token.split('.', 1)
-        message = b64decode(message_base64.encode())
-        message = message.decode()
+        message = base64_decoded(message_base64)
         user_id, expired_time = message.split(';', 1)
         signature = signature_created(message)
-        signature_check = b64decode(signature_base64.encode())
-        signature_check = signature_check.decode()
+        signature_check = base64_decoded(signature_base64)
         return _id == int(user_id) and not expired(int(expired_time)) and signature == signature_check
     except ValueError:
         return False
