@@ -1,5 +1,5 @@
 let todoTemplate = function (todo) {
-    let content = HTMLEncoder(todo.title);
+    let content = HTMLEscaped(todo.title);
     return`
         <li class="todo-cell" data-id="${todo.id}">
             <span class="todo-title">${content}</span>

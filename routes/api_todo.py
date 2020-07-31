@@ -6,7 +6,6 @@ from routes import (
     api_token_required,
 )
 from models.todo import Todo
-# from utiles import log
 
 
 @login_required
@@ -42,7 +41,7 @@ def api_delete(request) -> bytes:
 def api_update(request) -> bytes:
     form: dict = request.json()
     todo_id = int(form.pop('id'))
-    t = Todo.update(todo_id, **form)
+    t = Todo.upgrade(todo_id, **form)
     return json_response(t.json())
 
 

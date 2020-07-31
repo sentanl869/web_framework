@@ -5,7 +5,6 @@ from models import (
 )
 from models.user import User
 from time import time
-# from utiles import log
 
 
 class Session(Model):

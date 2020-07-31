@@ -13,7 +13,7 @@ class Todo(Model):
         PRIMARY KEY (`id`)
     )'''
 
-    def __init__(self, form: dict):
+    def __init__(self, form: dict) -> None:
         super().__init__(form)
         self.title = form['title']
         self.user_id = form['user_id']
@@ -29,7 +29,7 @@ class Todo(Model):
         return todo
 
     @classmethod
-    def update(cls, _id: int, **kwargs):
+    def upgrade(cls, _id: int, **kwargs):
         super().update(
             _id,
             title=kwargs['title'],

@@ -1,6 +1,5 @@
 import pymysql
-import secret
-import config
+from os import getenv
 from time import time
 from secrets import choice
 from hashlib import sha256
@@ -12,7 +11,6 @@ from string import (
     ascii_letters,
     digits,
 )
-# from utiles import log
 
 
 def random_string(random_range: int = 16) -> str:
@@ -28,7 +26,8 @@ def expired(expired_time: int) -> bool:
 
 
 def signature_created(message: str) -> str:
-    content = message + secret.token_key
+    token_key = getenv('token_key')
+    content = message + token_key
     result = sha256(content.encode('ascii')).hexdigest()
     return result
 
@@ -68,17 +67,21 @@ class Model:
     connection = None
 
     @classmethod
-    def init_db(cls):
+    def init_db(cls) -> None:
+        db_host = getenv('db_host')
+        db_user = getenv('db_user')
+        db_name = getenv('db_name')
+        mysql_password = getenv('mysql_password')
         cls.connection = pymysql.connect(
-            host=config.db_host,
-            user=config.db_user,
-            password=secret.mysql_password,
-            db=config.db_name,
+            host=db_host,
+            user=db_user,
+            password=mysql_password,
+            db=db_name,
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
 
-    def __init__(self, form: dict):
+    def __init__(self, form: dict) -> None:
         self.id = form.get('id', None)
 
     @classmethod
@@ -104,7 +107,6 @@ class Model:
             sql_keys,
             sql_value,
         )
-        # log(sql_insert)
         values = tuple(form.values())
 
         with cls.connection.cursor() as cursor:
@@ -114,7 +116,7 @@ class Model:
         return _id
 
     @classmethod
-    def update(cls, _id: int, **kwargs):
+    def update(cls, _id: int, **kwargs) -> None:
         sql_set = ', '.join(
             ['`{}`=%s'.format(k) for k in kwargs.keys()]
         )
@@ -129,7 +131,6 @@ class Model:
             cls.table_name(),
             sql_set,
         )
-        # log(sql_update)
         values = list(kwargs.values())
         values.append(_id)
         values = tuple(values)
@@ -139,14 +140,13 @@ class Model:
         cls.connection.commit()
 
     @classmethod
-    def delete(cls, _id: int):
+    def delete(cls, _id: int) -> None:
         sql_delete = '''
         DELETE FROM
             {}
         WHERE
             `id`=%s
         '''.format(cls.table_name())
-        # log(sql_delete)
         with cls.connection.cursor() as cursor:
             cursor.execute(sql_delete, (_id,))
         cls.connection.commit()
@@ -173,7 +173,6 @@ class Model:
         '''.format(sql_and)
         sql_limit = 'LIMIT 1;'
         sql_select = '{}{}{}'.format(sql_select, sql_where, sql_limit)
-        # log(sql_select)
         values = tuple(kwargs.values())
 
         with cls.connection.cursor() as cursor:
@@ -198,7 +197,6 @@ class Model:
                 {}
             '''.format(sql_and)
             sql_select = '{}{}'.format(sql_select, sql_where)
-        # log(sql_select)
         values = tuple(kwargs.values())
 
         with cls.connection.cursor() as cursor:

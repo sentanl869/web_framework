@@ -3,6 +3,7 @@ from threading import Thread
 from models import Model
 from utiles import log
 from request import Request
+from dotenv import load_dotenv
 from routes import error
 from routes.routes_public import route_dict as public_routes
 from routes.routes_todo import route_dict as todo_routes
@@ -22,7 +23,7 @@ def response_for_path(request) -> bytes:
     return response(request)
 
 
-def process_connection(connection: socket):
+def process_connection(connection: socket) -> None:
     with connection:
         buffer_size = 1024
         request = b''
@@ -33,7 +34,7 @@ def process_connection(connection: socket):
                 if len(r) < buffer_size:
                     request = request.decode()
                     r = Request(request)
-                    log(f'Target: {r.path}')
+                    log(f'Target: { r.path }')
                     break
             else:
                 break
@@ -46,20 +47,21 @@ def process_connection(connection: socket):
             connection.sendall(b'')
 
 
-def run(host: str, port: int):
-    log(f'The server is running at: {host}:{port}')
+def run(host: str, port: int) -> None:
+    log(f'The server is running at: { host }:{ port }')
+    load_dotenv()
     with socket() as s:
         s.bind((host, port))
         s.listen()
         Model.init_db()
         while True:
             connection, address = s.accept()
-            log(f'Connector: {address}')
+            log(f'Connector: { address }')
             # process_connection(connection)
             Thread(target=process_connection, args=(connection,)).start()
 
 
-def main():
+def main() -> None:
     config = dict(
         host='127.0.0.1',
         port=3000,

@@ -6,7 +6,6 @@ from routes import (
 from urllib import parse
 from models.user import User
 from models.session import Session
-# from utiles import log
 
 
 def login_view(request) -> bytes:

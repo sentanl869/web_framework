@@ -1,4 +1,4 @@
-let HTMLEncoder = function (title) {
+let HTMLEscaped = function (title) {
     let content = '';
     if (title.length === 0) {
         return content;

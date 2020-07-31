@@ -1,11 +1,10 @@
-# from utiles import log
 from urllib.parse import unquote_plus
 from json import loads
 
 
 class Request:
 
-    def __init__(self, raw_data: str):
+    def __init__(self, raw_data: str) -> None:
         self.raw = raw_data
         headers, self.body = raw_data.split('\r\n\r\n', 1)
         h = headers.split('\r\n')
@@ -23,7 +22,7 @@ class Request:
     def __repr__(self) -> str:
         return self.raw
 
-    def headers_add(self, header: list):
+    def headers_add(self, header: list) -> None:
         all_lines = header
 
         for line in all_lines:
@@ -34,10 +33,10 @@ class Request:
             all_cookies: str = self.headers['Cookie']
             cookies = all_cookies.split('; ')
             for cookie in cookies:
-                k, v = cookie.split('=')
+                k, v = cookie.split('=', 1)
                 self.cookies[k] = v
 
-    def path_parse(self, path: str):
+    def path_parse(self, path: str) -> None:
         index = path.find('?')
         if index == -1:
             self.path = path

@@ -1,8 +1,7 @@
 from models import Model
 from models.user_role import UserRole
-from secret import salt
 from hashlib import sha256
-# from utiles import log
+from os import getenv
 
 
 class User(Model):
@@ -15,7 +14,7 @@ class User(Model):
         PRIMARY KEY (`id`)
     )'''
 
-    def __init__(self, form):
+    def __init__(self, form) -> None:
         super().__init__(form)
         self.username = form['username']
         self.password = form['password']
@@ -33,6 +32,7 @@ class User(Model):
 
     @staticmethod
     def salted_password(password: str) -> str:
+        salt = getenv('salt')
         password = sha256(password.encode('ascii')).hexdigest()
         salted = password + salt
         hashed = sha256(salted.encode('ascii')).hexdigest()

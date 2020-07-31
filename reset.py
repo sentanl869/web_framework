@@ -1,40 +1,44 @@
 import pymysql
-import secret
-import config
-# from utiles import log
+from os import getenv
+from dotenv import load_dotenv
 from models import Model
 from models.todo import Todo
 from models.user import User
 from models.session import Session
 
 
-def recreate_table(cursor: pymysql.cursors.DictCursor):
+def recreate_table(cursor: pymysql.cursors.DictCursor) -> None:
     cursor.execute(Todo.sql_create)
     cursor.execute(User.sql_create)
     cursor.execute(Session.sql_create)
 
 
-def recreate_database():
-    connection = pymysql.connect(
-        host=config.db_host,
-        user=config.db_user,
-        password=secret.mysql_password,
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
-    )
+def recreate_database() -> None:
+    load_dotenv()
+    db_name = getenv('db_name')
+    db_host = getenv('db_host')
+    db_user = getenv('db_user')
+    mysql_password = getenv('mysql_password')
 
+    connection = pymysql.connect(
+            host=db_host,
+            user=db_user,
+            password=mysql_password,
+            charset='utf8mb4',
+            cursorclass=pymysql.cursors.DictCursor
+        )
     with connection.cursor() as cursor:
         cursor.execute(
             'DROP DATABASE IF EXISTS `{}`'.format(
-                config.db_name
+                db_name
             )
         )
         cursor.execute(
             'CREATE DATABASE `{}` DEFAULT CHARACTER SET utf8mb4'.format(
-                config.db_name
+                db_name
             )
         )
-        cursor.execute('USE `{}`'.format(config.db_name))
+        cursor.execute('USE `{}`'.format(db_name))
 
         recreate_table(cursor)
 
@@ -42,7 +46,7 @@ def recreate_database():
     connection.close()
 
 
-def generate_user():
+def generate_user() -> None:
     Model.init_db()
     d = dict(
         username='test',
