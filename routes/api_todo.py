@@ -31,7 +31,7 @@ def api_add(request) -> bytes:
 def api_delete(request) -> bytes:
     todo_id = request.query['id']
     Todo.delete(todo_id)
-    r = dict()
+    r = {}
     return json_response(r)
 
 

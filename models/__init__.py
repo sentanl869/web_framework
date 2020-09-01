@@ -15,7 +15,7 @@ from string import (
 
 def random_string(random_range: int = 16) -> str:
     seed = ascii_letters + digits
-    r = ''.join(choice(seed) for i in range(random_range))
+    r = ''.join(choice(seed) for _ in range(random_range))
     return r
 
 
@@ -90,7 +90,7 @@ class Model:
 
     @classmethod
     def insert(cls, form: dict) -> int:
-        form.pop('id')
+        del form['id']
         sql_keys = ', '.join(
             ['`{}`'.format(k) for k in form.keys()]
         )

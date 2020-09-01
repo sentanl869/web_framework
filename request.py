@@ -4,6 +4,8 @@ from json import loads
 
 class Request:
 
+    __slots__ = ['raw', 'body', 'method', 'path', 'query', 'headers', 'cookies']
+
     def __init__(self, raw_data: str) -> None:
         self.raw = raw_data
         headers, self.body = raw_data.split('\r\n\r\n', 1)
@@ -12,9 +14,9 @@ class Request:
         path = p[1]
         self.method = p[0]
         self.path = ''
-        self.query = dict()
-        self.headers = dict()
-        self.cookies = dict()
+        self.query = {}
+        self.headers = {}
+        self.cookies = {}
 
         self.headers_add(h[1:])
         self.path_parse(path)
@@ -43,7 +45,7 @@ class Request:
         else:
             path, query_content = path.split('?', 1)
             args = query_content.split('&')
-            query = dict()
+            query = {}
             for arg in args:
                 k, v = arg.split('=', 1)
                 query[k] = v
@@ -54,7 +56,7 @@ class Request:
     def form(self) -> dict:
         body = unquote_plus(self.body)
         args = body.split('&')
-        form = dict()
+        form = {}
         for arg in args:
             k, v = arg.split('=', 1)
             form[k] = v

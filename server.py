@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from socket import socket
 from threading import Thread
 from models import Model
@@ -13,7 +14,7 @@ from routes.api_todo import route_dict as api_todo_routes
 
 def response_for_path(request) -> bytes:
 
-    r = dict()
+    r = {}
     r.update(public_routes())
     r.update(todo_routes())
     r.update(user_routes())
@@ -62,10 +63,10 @@ def run(host: str, port: int) -> None:
 
 
 def main() -> None:
-    config = dict(
-        host='127.0.0.1',
-        port=3000,
-    )
+    config = {
+        'host': '127.0.0.1',
+        'port': 3000,
+    }
 
     run(**config)
 

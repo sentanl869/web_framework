@@ -12,8 +12,8 @@ from models.todo import Todo
 from models.session import Session
 
 
-def formatted_header(headers: dict, code: int = 200) -> str:
-    header = 'HTTP/1.1 {} OK\r\n'.format(code)
+def formatted_header(headers: dict, code: int = 200, status: str = 'OK') -> str:
+    header = 'HTTP/1.1 {} {}\r\n'.format(code, status)
     header += ''.join(
         ['{}: {}\r\n'.format(k, v) for k, v in headers.items()]
     )
@@ -58,8 +58,8 @@ def redirect(url: str, headers: dict = None) -> bytes:
     else:
         headers.update(h)
 
-    headers = formatted_header(headers, 302)
-    r = headers + '/r/n'
+    headers = formatted_header(headers, 302, 'Found')
+    r = headers + '\r\n'
     return r.encode()
 
 
