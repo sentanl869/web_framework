@@ -1,5 +1,4 @@
-import pymysql
-from os import getenv
+import os
 from time import time
 from secrets import choice
 from hashlib import sha256
@@ -11,6 +10,8 @@ from string import (
     ascii_letters,
     digits,
 )
+
+import pymysql
 
 
 def random_string(random_range: int = 16) -> str:
@@ -26,7 +27,7 @@ def expired(expired_time: int) -> bool:
 
 
 def signature_created(message: str) -> str:
-    token_key = getenv('token_key')
+    token_key = os.environ.get('token_key')
     content = message + token_key
     result = sha256(content.encode('ascii')).hexdigest()
     return result
@@ -68,10 +69,10 @@ class Model:
 
     @classmethod
     def init_db(cls) -> None:
-        db_host = getenv('db_host')
-        db_user = getenv('db_user')
-        db_name = getenv('db_name')
-        mysql_password = getenv('mysql_password')
+        db_host = os.environ.get('db_host')
+        db_user = os.environ.get('db_user')
+        db_name = os.environ.get('db_name')
+        mysql_password = os.environ.get('mysql_password')
         cls.connection = pymysql.connect(
             host=db_host,
             user=db_user,

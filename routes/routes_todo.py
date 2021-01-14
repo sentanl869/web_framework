@@ -58,7 +58,7 @@ def update(request) -> bytes:
     form = request.form()
     todo_id = int(form['id'])
     title = form['title']
-    todo = Todo.update(todo_id, title=title)
+    Todo.update(todo_id, title=title)
     return redirect('/todo')
 
 

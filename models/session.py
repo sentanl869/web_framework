@@ -1,10 +1,11 @@
+from time import time
+
 from models import (
     Model,
     random_string,
     expired,
 )
 from models.user import User
-from time import time
 
 
 class Session(Model):

@@ -1,5 +1,6 @@
-from models import Model
 from time import time
+
+from models import Model
 
 
 class Todo(Model):

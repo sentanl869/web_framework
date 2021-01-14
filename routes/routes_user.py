@@ -1,9 +1,10 @@
+from urllib import parse
+
 from routes import (
     TemplateRender,
     html_response,
     redirect,
 )
-from urllib import parse
 from models.user import User
 from models.session import Session
 

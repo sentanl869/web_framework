@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 from socket import socket
 from threading import Thread
+
+from dotenv import load_dotenv
+
 from models import Model
 from utiles import log
 from request import Request
-from dotenv import load_dotenv
 from routes import error
 from routes.routes_public import route_dict as public_routes
 from routes.routes_todo import route_dict as todo_routes

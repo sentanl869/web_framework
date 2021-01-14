@@ -1,7 +1,8 @@
+import os
+from hashlib import sha256
+
 from models import Model
 from models.user_role import UserRole
-from hashlib import sha256
-from os import getenv
 
 
 class User(Model):
@@ -32,7 +33,7 @@ class User(Model):
 
     @staticmethod
     def salted_password(password: str) -> str:
-        salt = getenv('salt')
+        salt = os.environ.get('salt')
         password = sha256(password.encode('ascii')).hexdigest()
         salted = password + salt
         hashed = sha256(salted.encode('ascii')).hexdigest()

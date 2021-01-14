@@ -1,6 +1,8 @@
+import os
+
 import pymysql
-from os import getenv
 from dotenv import load_dotenv
+
 from models import Model
 from models.todo import Todo
 from models.user import User
@@ -15,10 +17,10 @@ def recreate_table(cursor: pymysql.cursors.DictCursor) -> None:
 
 def recreate_database() -> None:
     load_dotenv()
-    db_name = getenv('db_name')
-    db_host = getenv('db_host')
-    db_user = getenv('db_user')
-    mysql_password = getenv('mysql_password')
+    db_name = os.environ.get('db_name')
+    db_host = os.environ.get('db_host')
+    db_user = os.environ.get('db_user')
+    mysql_password = os.environ.get('mysql_password')
 
     connection = pymysql.connect(
             host=db_host,
