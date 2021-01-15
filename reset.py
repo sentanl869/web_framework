@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from models import Model
 from models.todo import Todo
 from models.user import User
+from models.user_role import UserRole
 from models.session import Session
 
 
@@ -50,11 +51,12 @@ def recreate_database() -> None:
 
 def generate_user() -> None:
     Model.init_db()
-    d = dict(
-        username='test',
-        password='1231234',
-    )
-    User.register(d)
+    user = {
+        'username': os.environ.get('admin_username'),
+        'password': os.environ.get('admin_password'),
+        'role': UserRole.admin
+    }
+    User.register(user)
     User.connection.close()
 
 

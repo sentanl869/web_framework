@@ -23,11 +23,11 @@ class User(Model):
 
     @staticmethod
     def guest():
-        form = dict(
-            role=UserRole.guest,
-            username='Guest',
-            password='Guest'
-        )
+        form = {
+            'role': UserRole.guest,
+            'username': 'Guest',
+            'password': 'Guest'
+        }
         u = User(form)
         return u
 
