@@ -66,7 +66,7 @@ def redirect(url: str, headers: dict = None) -> bytes:
 
 
 def error(request, code: int = 404) -> bytes:
-    log('Error: \n', request)
+    log(f'HTTP request error: <{request.method}> {request.full_path}')
     code = str(code)
     r = {
         '403': b'HTTP/1.1 403 Forbidden\r\n\r\n<h1>403 FORBIDDEN</h1>',

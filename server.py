@@ -37,13 +37,14 @@ def process_connection(connection: socket) -> None:
                 if len(r) < buffer_size:
                     request = request.decode()
                     r = Request(request)
-                    log(f'Target: { r.path }')
+                    log(f'HTTP request: <{r.method}> {r.full_path}')
                     break
             else:
                 break
 
         try:
             response = response_for_path(r)
+            log(f'HTTP response: {response}')
             connection.sendall(response)
         except AttributeError:
             log('Error: An empty request.')
@@ -51,15 +52,15 @@ def process_connection(connection: socket) -> None:
 
 
 def run(host: str, port: int) -> None:
-    log(f'The server is running at: { host }:{ port }')
     load_dotenv()
     with socket() as s:
         s.bind((host, port))
         s.listen()
         Model.init_db()
+        log(f'The server is running at: http://{host}:{port}')
         while True:
             connection, address = s.accept()
-            log(f'Connector: { address }')
+            log(f'Connector: {address}')
             # process_connection(connection)
             Thread(target=process_connection, args=(connection,)).start()
 
@@ -69,7 +70,6 @@ def main() -> None:
         'host': '127.0.0.1',
         'port': 3000,
     }
-
     run(**config)
 
 
