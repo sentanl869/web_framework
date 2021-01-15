@@ -4,14 +4,15 @@ from json import loads
 
 class Request:
 
-    __slots__ = ['raw', 'body', 'method', 'path', 'query', 'headers', 'cookies']
+    __slots__ = ['raw', 'host', 'body', 'method', 'full_path', 'path', 'query', 'headers', 'cookies']
 
     def __init__(self, raw_data: str) -> None:
         self.raw = raw_data
         headers, self.body = raw_data.split('\r\n\r\n', 1)
         h = headers.split('\r\n')
+        self.host = h[1].split(': ', 1)[1]
         p = h[0].split()
-        path = p[1]
+        self.full_path = p[1]
         self.method = p[0]
         self.path = ''
         self.query = {}
@@ -19,7 +20,7 @@ class Request:
         self.cookies = {}
 
         self.headers_add(h[1:])
-        self.path_parse(path)
+        self.path_parse(self.full_path)
 
     def __repr__(self) -> str:
         return self.raw
