@@ -7,6 +7,8 @@ let HTMLEscaped = function (title) {
         content = content.replace(/</g, '&lt;');
         content = content.replace(/>/g, '&gt;');
         content = content.replace(/ /g, '&nbsp;');
+        content = content.replace(/"/g, '&quot;');
+        content = content.replace(/'/g, '&#x27;');
     }
 
     return content;
