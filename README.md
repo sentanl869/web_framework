@@ -5,8 +5,6 @@
 
 一个使用 `Python` 基于 `socket` 开发的 `MVC` 架构的 Web 框架。
 ***
-![socket](/screenshot/socket.gif)
-***
 ## 项目介绍
 - 基于 `socket` 实现多线程的 Web 服务器的构建。
 - 采用 `MVC` 架构，减少系统耦合，提高系统灵活性以及代码可重用性。
@@ -25,3 +23,5 @@
 - 基于用户系统实现了 Todo 功能，包括用户对 Todo 内容的查看、发布、修改和删除。
 - 实现了 Todo 相关功能的 `API` 接口，以及实现了相关 `API` 的鉴权。
 - 基于 Todo 相关功能的 `API` 接口，实现了基于 `AJAX` 应用的 Todo 功能。
+***
+![socket](/screenshot/socket.gif)
