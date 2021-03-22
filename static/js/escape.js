@@ -1,4 +1,4 @@
-let HTMLEscaped = (title) => {
+const HTMLEscaped = (title) => {
     let content = ''
     if (title.length === 0) {
         return content

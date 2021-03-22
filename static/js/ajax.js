@@ -1,4 +1,4 @@
-let ajax = (method, path, data, token, responseCallback) => {
+const ajax = (method, path, data, token, responseCallback) => {
     let request = new XMLHttpRequest()
     request.open(method, path, true)
     request.setRequestHeader('Content-Type', 'application/json')

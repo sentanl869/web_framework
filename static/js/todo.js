@@ -1,4 +1,4 @@
-let todoTemplate = (todo) => {
+const todoTemplate = (todo) => {
     let content = HTMLEscaped(todo.title)
     return`
         <li class="todo-cell" data-id="${todo.id}">
@@ -9,7 +9,7 @@ let todoTemplate = (todo) => {
     `
 }
 
-let todoEditTemplate = (title) => {
+const todoEditTemplate = (title) => {
     return `
         <div class="todo-update-form">
             <input class="todo-update-input" value="${title}"/>
@@ -18,40 +18,40 @@ let todoEditTemplate = (title) => {
     `
 }
 
-let token = document.querySelector('meta[name=token]').content
+const token = document.querySelector('meta[name=token]').content
 
-let apiTodoAll = (callback) => {
-    let path = '/api/todo/all'
+const apiTodoAll = (callback) => {
+    const path = '/api/todo/all'
     ajax('GET', path, '', token, callback)
 }
 
-let apiTodoAdd = (form, callback) => {
-    let path = '/api/todo/add'
+const apiTodoAdd = (form, callback) => {
+    const path = '/api/todo/add'
     ajax('POST', path, form, token, callback)
 }
 
-let apiTodoDelete = (todoId, callback) => {
+const apiTodoDelete = (todoId, callback) => {
     let path = `/api/todo/delete?id=${todoId}`
     ajax('GET', path, '', token, callback)
 }
 
-let apiTodoUpdate = (form, callback) => {
-    let path = '/api/todo/update'
+const apiTodoUpdate = (form, callback) => {
+    const path = '/api/todo/update'
     ajax('POST', path, form, token, callback)
 }
 
-let insertTodo = (todo) => {
+const insertTodo = (todo) => {
     let todoCell = todoTemplate(todo)
     let todoList = document.querySelector('#id-todo-list')
     todoList.insertAdjacentHTML('beforeend', todoCell)
 }
 
-let insertEditForm = (title, todoCell) => {
+const insertEditForm = (title, todoCell) => {
     let editForm = todoEditTemplate(title)
     todoCell.insertAdjacentHTML('beforeend', editForm)
 }
 
-let loadTodos = () => {
+const loadTodos = () => {
     apiTodoAll((todos) => {
         for (let i = 0; i < todos.length; i++) {
             let todo = todos[i]
@@ -60,7 +60,7 @@ let loadTodos = () => {
     })
 }
 
-let bindEventTodoAdd = () => {
+const bindEventTodoAdd = () => {
     let bind = document.querySelector('#id-button-add')
     bind.addEventListener('click', () => {
         let input = document.querySelector('#id-input-todo')
@@ -75,7 +75,7 @@ let bindEventTodoAdd = () => {
     })
 }
 
-let bindEventTodoDelete = () => {
+const bindEventTodoDelete = () => {
     let bind = document.querySelector('#id-todo-list')
     bind.addEventListener('click', (event) => {
         let self = event.target
@@ -88,7 +88,7 @@ let bindEventTodoDelete = () => {
     })
 }
 
-let bindEventTodoEdit = () => {
+const bindEventTodoEdit = () => {
     let bind = document.querySelector('#id-todo-list')
     bind.addEventListener('click', (event) => {
         let self = event.target
@@ -102,7 +102,7 @@ let bindEventTodoEdit = () => {
     })
 }
 
-let bindEventTodoUpdate = () => {
+const bindEventTodoUpdate = () => {
     let bind = document.querySelector('#id-todo-list')
     bind.addEventListener('click', (event) => {
         let self = event.target
@@ -127,14 +127,14 @@ let bindEventTodoUpdate = () => {
     })
 }
 
-let bindEventTodo = () => {
+const bindEventTodo = () => {
     bindEventTodoAdd()
     bindEventTodoDelete()
     bindEventTodoEdit()
     bindEventTodoUpdate()
 }
 
-let __main = () => {
+const __main = () => {
     bindEventTodo()
     loadTodos()
 }
