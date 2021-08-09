@@ -32,7 +32,7 @@ def html_response(body: str, headers: dict = None) -> bytes:
         headers.update(h)
 
     header = formatted_header(headers)
-    r = header + '\r\n' + body
+    r = ''.join([header, '\r\n', body])
     return r.encode()
 
 
@@ -47,7 +47,7 @@ def json_response(data, headers: dict = None) -> bytes:
 
     header = formatted_header(headers)
     body = dumps(data, ensure_ascii=False, indent=2)
-    r = header + '\r\n' + body
+    r = ''.join([header, '\r\n', body])
     return r.encode()
 
 
